@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>رادار الخفجي الذكي للصقور</title>
-    <!-- ربط مكتبة الخرائط الجغرافية المجانية لبر الخفجي والمملكة -->
-    <link rel="stylesheet" href="https://unpkg.com" />
+    <link rel="stylesheet" href="https://jsdelivr.net" />
     <style>
-        /* الألوان الفخمة والميدانية المعتمدة (Dark Mode) */
         body {
-            background-color: #0b0d10; /* الأسود الملكي */
+            background-color: #0b0d10;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
             margin: 0;
             padding: 12px;
             box-sizing: border-box;
@@ -22,7 +20,7 @@
         .app-header {
             background-color: #12161a;
             border: 1px solid #1f262d;
-            border-bottom: 3px solid #00ff66; /* الأخضر الفسفوري */
+            border-bottom: 3px solid #00ff66;
             padding: 12px;
             border-radius: 10px;
             display: flex;
@@ -30,15 +28,10 @@
             justify-content: space-between;
             margin-bottom: 10px;
         }
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .brand-section { display: flex; align-items: center; gap: 15px; }
         .app-title { margin: 0; font-size: 18px; font-weight: bold; }
         .app-subtitle { margin: 3px 0 0 0; font-size: 11px; color: #8b949e; }
         
-        /* مربع صقرك الفاخر المخصص القابل للتغيير بالضغط */
         .avatar-container { position: relative; cursor: pointer; }
         .app-avatar {
             width: 55px;
@@ -60,12 +53,13 @@
             background-color: #12161a; border: 1px solid #1f262d; border-radius: 10px; padding: 10px; text-align: center;
         }
         .card-label { font-size: 12px; color: #8b949e; margin-bottom: 5px; }
-        .card-value { font-size: 19px; font-weight: bold; color: #00ff66; } /* نيون مضيء للشمس */
+        .card-value { font-size: 19px; font-weight: bold; color: #00ff66; }
         
         .radar-screen {
             flex: 1; border: 1px solid #1f262d; border-radius: 10px; overflow: hidden; margin-bottom: 10px; position: relative;
+            background-color: #12161a;
         }
-        #map { width: 100%; height: 100%; z-index: 1; }
+        #map { width: 100%; height: 100%; }
         .action-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn {
             background-color: #12161a; color: #00ff66; border: 1px solid #1f262d; padding: 14px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center;
@@ -76,7 +70,6 @@
 </head>
 <body>
 
-    <!-- 1. ترويسة البرنامج العلوية المحكمة وصورة صقرك -->
     <div class="app-header">
         <div class="brand-section">
             <div class="avatar-container" onclick="document.getElementById('file-input').click()">
@@ -86,13 +79,12 @@
             <input type="file" id="file-input" accept="image/*" onchange="loadPhoto(event)">
             <div>
                 <h1 class="app-title">رادار الخفجي</h1>
-                <p class="app-subtitle">منظومة التنبؤ الميدانية بنزل الصقور</p>
+                <p class="app-subtitle">منظومة التنبؤ الميدانية بنزل الطيور</p>
             </div>
         </div>
         <div style="font-size: 11px; color: #8b949e;">النسخة الحية v1.0</div>
     </div>
 
-    <!-- 2. شريط عدادات الأرصاد والطقس الحية التلقائية الحرة بالكامل -->
     <div class="dashboard-grid">
         <div class="card">
             <div class="card-label">🧭 اتجاه الرياح</div>
@@ -108,21 +100,17 @@
         </div>
     </div>
 
-    <!-- 3. شاشة خريطة الرادار الجغرافية المركزية (الـ GPS التلقائي) -->
     <div class="radar-screen">
         <div id="map"></div>
     </div>
 
-    <!-- 4. شريط الأزرار التكتيكية الميدانية الحرة بالأسفل -->
     <div class="action-bar">
         <button class="btn" onclick="activateCoastalMorning()">🔘 خيار نزل الصباح الساحلي</button>
         <button class="btn btn-main" onclick="locateUserAndPredict()">🗺️ وجهني للأقرب لـ شبك الطير</button>
     </div>
 
-    <!-- تشغيل محرك الخرائط والذكاء الاصطناعي للأرصاد مجاناً وبدون أخطاء -->
-    <script src="https://unpkg.com"></script>
+    <script src="https://jsdelivr.net"></script>
     <script>
-        // تثبيت مركز الخريطة الافتراضي المبدئي فوق محافظة الخفجي
         var map = L.map('map').setView([28.4328, 48.4908], 9);
         var userMarker, predictionMarker;
 
@@ -130,55 +118,51 @@
             maxZoom: 18, attribution: 'رادار الطرح'
         }).addTo(map);
 
-        // وظيفة تحديد موقع سيارتك بالـ GPS وتحديث الرياح تلقائياً في ثانية
+        setTimeout(function(){ map.invalidateSize(); }, 500);
+
         function locateUserAndPredict() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var lat = position.coords.latitude;
                     var lon = position.coords.longitude;
 
-                    // تحديث الخريطة على موقع سيارتك الحالي بالبر أو الساحل
                     map.setView([lat, lon], 11);
                     if (userMarker) map.removeLayer(userMarker);
                     userMarker = L.marker([lat, lon]).addTo(map).bindPopup('<b>🔵 موقع سيارتك الحالي</b>').openPopup();
 
-                    // الاتصال برادار الطقس المجاني المفتوح ومطابقة أجواء إحداثيتك الآن
                     var url = `https://open-meteo.com{lat}&longitude=${lon}&current=wind_speed_10m,wind_direction_10m&timezone=auto`;
                     fetch(url).then(res => res.json()).then(data => {
                         var speed = data.current.wind_speed_10m;
                         var degrees = data.current.wind_direction_10m;
                         var direction = parseWindDirection(degrees);
 
-                        // حساب النزل الذكي التلقائي بمحيط 50 كم حول سيارتك العصر
-                        var index = 60;
+                        var index = 65;
                         if (direction.includes("شمالية")) index += 20;
-                        if (speed > 25) index += 15;
+                        if (speed > 25) index += 10;
                         if (index > 99) index = 99;
 
                         document.getElementById('wind-speed').innerText = speed + " كم/س";
                         document.getElementById('wind-dir').innerText = direction;
                         document.getElementById('landing-index').innerText = index + "%";
 
-                        // وضع الدائرة الذهبية وإحداثية نزل الطير الأقرب لك
                         if (predictionMarker) map.removeLayer(predictionMarker);
-                        var predLat = lat + (direction.includes("شرقية") ? -0.05 : 0.05);
-                        var predLon = lon + (direction.includes("غربية") ? -0.05 : 0.03);
+                        var predLat = lat + (direction.includes("شرقية") ? -0.04 : 0.04);
+                        var predLon = lon + (direction.includes("غربية") ? -0.04 : 0.02);
 
                         predictionMarker = L.circle([predLat, predLon], {
                             color: '#ffaa00', fillColor: '#ffaa00', fillOpacity: 0.4, radius: 2500
                         }).addTo(map).bindPopup('<b>🟡 الموقع الأقرب المتوقع لنزل العصر</b><br>انطلق لـ شبك الطير هنا قبل مغيب الشمس.').openPopup();
                     });
-                }, function() { alert("تنبيه: يرجى تفعيل إذن الـ GPS بجوالك ليرصد سيارتك بالبر."); });
+                }, function() { alert("تنبيه: يرجى تفعيل إذن الـ GPS بجوالك أو متصفحك ليرصد سيارتك."); });
             }
         }
 
-        // خيار نزل الصباح الساحلي المخصص لحساب الشواهين المرتفعة بالبحر
         function activateCoastalMorning() {
-            alert("🎯 تم تفعيل خيار نزل الصباح الساحلي: جاري حساب مسافة الـ 190 كم والجزر والأعمدة لتوقع موقع وقوف الشاهين المرتفع على الشاطئ.");
-            map.setView([28.4232, 48.4908], 11); // التوجيه الفوري لشواطئ الخفجي
+            alert("🎯 تم تفعيل خيار نزل الصباح الساحلي: جاري حساب مسار الشاهين المرتفع بالبحر.");
+            map.setView([28.4532, 48.4908], 11);
             if (predictionMarker) map.removeLayer(predictionMarker);
-            predictionMarker = L.marker([28.4600, 48.4800]).addTo(map)
-                .bindPopup('<b>🦅 نزل الصباح الساحلي (طير مرتفع)</b><br>الموقع المتوقع لحط الصقر على مياذير وأعمدة الشاطئ شمال الخفجي لـ شبك الطير.').openPopup();
+            predictionMarker = L.marker([28.4700, 48.4800]).addTo(map)
+                .bindPopup('<b>🦅 نزل الصباح الساحلي (طير مرتفع)</b><br>الموقع المتوقع لحط الصقر على مياذير وأعمدة الشاطئ لـ شبك الطير.').openPopup();
         }
 
         function parseWindDirection(deg) {
@@ -194,7 +178,7 @@
 
         function loadPhoto(e) {
             var out = document.getElementById('falcon-pic');
-            out.src = URL.createObjectURL(e.target.files[0]);
+            out.src = URL.createObjectURL(e.target.files);
             out.onload = function() { URL.revokeObjectURL(out.src); }
         }
     </script>

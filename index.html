@@ -1,1216 +1,186 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>رادار الخفجي الذكي للصقور</title>
-
-    <!-- Leaflet CSS -->
-    <link
-        rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    >
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-        }
-
-        body {
-            background: #0b0d10;
-            color: white;
-            font-family: Tahoma, "Segoe UI", sans-serif;
-            padding: 12px;
-
-            display: flex;
-            flex-direction: column;
-
-            overflow: hidden;
-        }
-
-        /* ================= HEADER ================= */
-
-        .app-header {
-
-            background: #12161a;
-
-            border: 1px solid #1f262d;
-            border-bottom: 3px solid #00ff66;
-
-            padding: 12px;
-
-            border-radius: 10px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            margin-bottom: 10px;
-
-            flex-shrink: 0;
-        }
-
-        .brand-section {
-
-            display: flex;
-            align-items: center;
-
-            gap: 15px;
-        }
-
-        .app-title {
-
-            margin: 0;
-
-            font-size: 18px;
-
-            font-weight: bold;
-        }
-
-        .app-subtitle {
-
-            margin: 4px 0 0;
-
-            font-size: 11px;
-
-            color: #8b949e;
-        }
-
-        /* ================= IMAGE ================= */
-
-        .avatar-container {
-
-            position: relative;
-
-            cursor: pointer;
-        }
-
-        .app-avatar {
-
-            width: 55px;
-            height: 55px;
-
-            border-radius: 8px;
-
-            border: 1px solid #00ff66;
-
-            object-fit: cover;
-
-            background: #161b22;
-        }
-
-        .upload-hint {
-
-            position: absolute;
-
-            bottom: 0;
-            left: 0;
-            right: 0;
-
-            background: rgba(0,0,0,.75);
-
-            color: #00ff66;
-
-            font-size: 8px;
-
-            text-align: center;
-
-            padding: 2px;
-
-            border-radius: 0 0 8px 8px;
-        }
-
-        #file-input {
-            display: none;
-        }
-
-        /* ================= DASHBOARD ================= */
-
-        .dashboard-grid {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 10px;
-
-            margin-bottom: 10px;
-
-            flex-shrink: 0;
-        }
-
-        .card {
-
-            background: #12161a;
-
-            border: 1px solid #1f262d;
-
-            border-radius: 10px;
-
-            padding: 10px;
-
-            text-align: center;
-        }
-
-        .card-label {
-
-            color: #8b949e;
-
-            font-size: 12px;
-
-            margin-bottom: 5px;
-        }
-
-        .card-value {
-
-            color: #00ff66;
-
-            font-size: 19px;
-
-            font-weight: bold;
-        }
-
-        /* ================= MAP ================= */
-
-        .radar-screen {
-
-            position: relative;
-
-            flex: 1;
-
-            min-height: 250px;
-
-            background: #12161a;
-
-            border: 1px solid #1f262d;
-
-            border-radius: 10px;
-
-            overflow: hidden;
-
-            margin-bottom: 10px;
-        }
-
-        #map {
-
-            width: 100%;
-            height: 100%;
-        }
-
-        /* ================= BUTTONS ================= */
-
-        .action-bar {
-
-            display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 10px;
-
-            flex-shrink: 0;
-        }
-
-        .btn {
-
-            background: #12161a;
-
-            color: #00ff66;
-
-            border: 1px solid #1f262d;
-
-            padding: 14px;
-
-            border-radius: 8px;
-
-            font-size: 14px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-        }
-
-        .btn:hover {
-
-            border-color: #00ff66;
-        }
-
-        .btn:active {
-
-            transform: scale(.98);
-        }
-
-        .btn-main {
-
-            background: #00ff66;
-
-            color: #000;
-
-            border-color: #00ff66;
-
-            box-shadow:
-                0 4px 15px
-                rgba(0,255,102,.25);
-        }
-
-        /* ================= MOBILE ================= */
-
-        @media (max-width: 600px) {
-
-            .app-title {
-                font-size: 15px;
-            }
-
-            .app-subtitle {
-                font-size: 9px;
-            }
-
-            .card-label {
-                font-size: 10px;
-            }
-
-            .card-value {
-                font-size: 15px;
-            }
-
-            .btn {
-                font-size: 11px;
-                padding: 12px 5px;
-            }
-
-        }
-
+        * {box-sizing: border-box;}
+        html,body {width: 100%;height: 100%;margin: 0;}
+        body {background: #0b0d10;color: white;font-family: Tahoma, "Segoe UI", sans-serif;padding: 12px;display: flex;flex-direction: column;overflow: hidden;}
+       .app-header {background: #12161a;border: 1px solid #1f262d;border-bottom: 3px solid #00ff66;padding: 12px;border-radius: 10px;display: flex;align-items: center;justify-content: space-between;margin-bottom: 10px;flex-shrink: 0;}
+       .brand-section {display: flex;align-items: center;gap: 15px;}
+       .app-title {margin: 0;font-size: 18px;font-weight: bold;}
+       .app-subtitle {margin: 4px 0 0;font-size: 11px;color: #8b949e;}
+       .avatar-container {position: relative;cursor: pointer;}
+       .app-avatar {width: 55px;height: 55px;border-radius: 8px;border: 1px solid #00ff66;object-fit: cover;background: #161b22;}
+       .upload-hint {position: absolute;bottom: 0;left: 0;right: 0;background: rgba(0,0,0,.75);color: #00ff66;font-size: 8px;text-align: center;padding: 2px;border-radius: 0 0 8px 8px;}
+        #file-input {display: none;}
+       .dashboard-grid {display: grid;grid-template-columns:repeat(3, 1fr);gap: 10px;margin-bottom: 10px;flex-shrink: 0;}
+       .card {background: #12161a;border: 1px solid #1f262d;border-radius: 10px;padding: 10px;text-align: center;}
+       .card-label {color: #8b949e;font-size: 12px;margin-bottom: 5px;}
+       .card-value {color: #00ff66;font-size: 19px;font-weight: bold;}
+       .radar-screen {position: relative;flex: 1;min-height: 250px;background: #12161a;border: 1px solid #1f262d;border-radius: 10px;overflow: hidden;margin-bottom: 10px;}
+        #map {width: 100%;height: 100%;}
+       .action-bar {display: grid;grid-template-columns:1fr 1fr;gap: 10px;flex-shrink: 0;}
+       .btn {background: #12161a;color: #00ff66;border: 1px solid #1f262d;padding: 14px;border-radius: 8px;font-size: 14px;font-weight: bold;cursor: pointer;}
+       .btn:hover {border-color: #00ff66;}
+       .btn:active {transform: scale(.98);}
+       .btn-main {background: #00ff66;color: #000;border-color: #00ff66;box-shadow:0 4px 15px rgba(0,255,102,.25);}
+        @media (max-width: 600px) {.app-title {font-size: 15px;}.app-subtitle {font-size: 9px;}.card-label {font-size: 10px;}.card-value {font-size: 15px;}.btn {font-size: 11px;padding: 12px 5px;}}
+       .leaflet-tile { filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(1.1); }
+       .leaflet-container { background: #0b0d10!important; }
+       .leaflet-popup-content-wrapper { background: #12161a; color: white; }
     </style>
-
 </head>
-
-
 <body>
-
-
-<!-- ================= HEADER ================= -->
-
 <div class="app-header">
-
     <div class="brand-section">
-
-        <div
-            class="avatar-container"
-            onclick="document.getElementById('file-input').click()"
-        >
-
-            <!-- إذا لم توجد الصورة سيظهر مكانها لون داكن -->
-            <img
-                id="falcon-pic"
-                class="app-avatar"
-                src="falcon_main.jpg"
-                alt="الصقر"
-                onerror="this.style.display='none';"
-            >
-
-            <div class="upload-hint">
-                تعديل 📸
-            </div>
-
+        <div class="avatar-container" onclick="document.getElementById('file-input').click()">
+            <img id="falcon-pic" class="app-avatar" src="falcon_main.jpg" alt="الصقر" onerror="this.style.display='none';">
+            <div class="upload-hint">تعديل 📸</div>
         </div>
-
-
-        <input
-            type="file"
-            id="file-input"
-            accept="image/*"
-            onchange="loadPhoto(event)"
-        >
-
-
-        <div>
-
-            <h1 class="app-title">
-                رادار الخفجي
-            </h1>
-
-            <p class="app-subtitle">
-                منظومة التنبؤ الميدانية بنزل الطيور
-            </p>
-
-        </div>
-
+        <input type="file" id="file-input" accept="image/*" onchange="loadPhoto(event)">
+        <div><h1 class="app-title">رادار الخفجي</h1><p class="app-subtitle">منظومة التنبؤ الميدانية بنزل الطيور</p></div>
     </div>
-
-
-    <div style="
-        font-size:11px;
-        color:#8b949e;
-    ">
-        النسخة الحية v1.0
-    </div>
-
+    <div style="font-size:11px;color:#8b949e;">النسخة الحية v1.1</div>
 </div>
-
-
-
-<!-- ================= DATA ================= -->
-
 <div class="dashboard-grid">
-
-
-    <div class="card">
-
-        <div class="card-label">
-            🧭 اتجاه الرياح
-        </div>
-
-        <div
-            id="wind-dir"
-            class="card-value"
-        >
-            اضغط تحديد الموقع
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <div class="card-label">
-            💨 سرعة الهواء
-        </div>
-
-        <div
-            id="wind-speed"
-            class="card-value"
-        >
-            اضغط تحديد الموقع
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <div class="card-label">
-            🟢 مؤشر النزل
-        </div>
-
-        <div
-            id="landing-index"
-            class="card-value"
-        >
-            -- %
-        </div>
-
-    </div>
-
-
+    <div class="card"><div class="card-label">🧭 اتجاه الرياح</div><div id="wind-dir" class="card-value">اضغط تحديد الموقع</div></div>
+    <div class="card"><div class="card-label">💨 سرعة الهواء</div><div id="wind-speed" class="card-value">اضغط تحديد الموقع</div></div>
+    <div class="card"><div class="card-label">🟢 مؤشر النزل</div><div id="landing-index" class="card-value">-- %</div></div>
 </div>
-
-
-
-<!-- ================= MAP ================= -->
-
-<div class="radar-screen">
-
-    <div id="map"></div>
-
-</div>
-
-
-
-<!-- ================= BUTTONS ================= -->
-
+<div class="radar-screen"><div id="map"></div></div>
 <div class="action-bar">
-
-
-    <button
-        class="btn"
-        id="morningBtn"
-        type="button"
-    >
-        🔘 خيار نزل الصباح الساحلي
-    </button>
-
-
-    <button
-        class="btn btn-main"
-        id="locationBtn"
-        type="button"
-    >
-        🗺️ وجهني للأقرب لـ شبك الطير
-    </button>
-
-
+    <button class="btn" id="morningBtn" type="button">🔘 خيار نزل الصباح الساحلي</button>
+    <button class="btn btn-main" id="locationBtn" type="button">🗺️ وجهني للأقرب لـ شبك الطير</button>
 </div>
-
-
-
-<!-- ================= LEAFLET ================= -->
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-
 <script>
-
 "use strict";
-
-
-/* =====================================================
-   VARIABLES
-===================================================== */
-
-let map;
-
-let userMarker = null;
-
-let predictionMarker = null;
-
-
-
-/* =====================================================
-   START MAP
-===================================================== */
+let map;let userMarker = null;let predictionMarker = null;
 
 function startMap() {
-
     try {
+        map = L.map("map").setView([28.4328, 48.4908],10);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom: 19,attribution:"&copy; OpenStreetMap"}).addTo(map);
+        L.marker([28.4328, 48.4908]).addTo(map).bindPopup("<b>📍 الخفجي</b><br>منطقة الرصد");
 
-        map = L.map("map").setView(
-            [28.4328, 48.4908],
-            10
-        );
+        // تحديد بالنقر على الخريطة - للدقة
+        map.on('click', function(e) {
+            const lat = e.latlng.lat;const lon = e.latlng.lng;
+            if (userMarker) map.removeLayer(userMarker);
+            userMarker = L.marker([lat, lon]).addTo(map).bindPopup("<b>🔵 موقعك المحدد</b>").openPopup();
+            getWeather(lat, lon);
+            document.getElementById("locationBtn").innerText = "📍 تم التحديد يدوي";
+        });
 
-
-        L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            {
-                maxZoom: 19,
-
-                attribution:
-                    "&copy; OpenStreetMap"
-            }
-        ).addTo(map);
-
-
-        /* علامة الخفجي */
-
-        L.marker(
-            [28.4328, 48.4908]
-        )
-        .addTo(map)
-        .bindPopup(
-            "<b>📍 الخفجي</b><br>منطقة الرصد"
-        );
-
-
-        setTimeout(function() {
-
-            map.invalidateSize();
-
-        }, 500);
-
-
-    } catch (error) {
-
-        console.error(
-            "خطأ في تشغيل الخريطة:",
-            error
-        );
-
-        alert(
-            "حدث خطأ في تشغيل الخريطة."
-        );
-    }
-
+        setTimeout(function() {map.invalidateSize();}, 500);
+    } catch (error) {console.error("خطأ في تشغيل الخريطة:", error);alert("حدث خطأ في تشغيل الخريطة.");}
 }
-
-
-
-/* =====================================================
-   GET USER LOCATION
-===================================================== */
 
 function locateUserAndPredict() {
-
-
-    if (!navigator.geolocation) {
-
-        alert(
-            "❌ المتصفح لا يدعم تحديد الموقع."
-        );
-
-        return;
-    }
-
-
-    const button =
-        document.getElementById(
-            "locationBtn"
-        );
-
-
-    button.innerText =
-        "📍 جاري تحديد موقعك...";
-
-
-    document.getElementById(
-        "wind-dir"
-    ).innerText =
-        "جاري الرصد...";
-
-
-    document.getElementById(
-        "wind-speed"
-    ).innerText =
-        "جاري الرصد...";
-
-
+    if (!navigator.geolocation) {alert("❌ المتصفح لا يدعم تحديد الموقع.");return;}
+    const button = document.getElementById("locationBtn");
+    button.innerText = "📍 جاري تحديد موقعك...";
+    document.getElementById("wind-dir").innerText = "جاري الرصد...";
+    document.getElementById("wind-speed").innerText = "جاري الرصد...";
     navigator.geolocation.getCurrentPosition(
-
         function(position) {
-
-
-            const lat =
-                position.coords.latitude;
-
-
-            const lon =
-                position.coords.longitude;
-
-
-            console.log(
-                "GPS:",
-                lat,
-                lon
-            );
-
-
-            /* الخريطة */
-
-            map.setView(
-                [lat, lon],
-                13
-            );
-
-
-            /* إزالة العلامة السابقة */
-
-            if (userMarker) {
-
-                map.removeLayer(
-                    userMarker
-                );
-            }
-
-
-            /* علامة موقع المستخدم */
-
-            userMarker =
-                L.marker(
-                    [lat, lon]
-                )
-                .addTo(map)
-                .bindPopup(
-                    "<b>🔵 أنت هنا</b><br>" +
-                    "موقعك الحالي"
-                )
-                .openPopup();
-
-
-            /* جلب الطقس */
-
-            getWeather(
-                lat,
-                lon
-            );
-
-
-            button.innerText =
-                "📍 تم تحديد موقعك";
-
-
+            const lat = position.coords.latitude;const lon = position.coords.longitude;
+            map.setView([lat, lon],15);
+            if (userMarker) map.removeLayer(userMarker);
+            userMarker = L.marker([lat, lon]).addTo(map).bindPopup("<b>🔵 أنت هنا GPS</b>").openPopup();
+            getWeather(lat, lon);
+            button.innerText = "📍 تم تحديد موقعك";
         },
-
-
         function(error) {
-
-
-            console.error(
-                "GPS ERROR:",
-                error
-            );
-
-
-            button.innerText =
-                "🗺️ وجهني للأقرب لـ شبك الطير";
-
-
-            if (error.code === 1) {
-
-                alert(
-                    "⚠️ تم رفض إذن الموقع.\n\n" +
-                    "اضغط علامة 🔒 بجانب عنوان الموقع في Chrome، " +
-                    "ثم فعّل الموقع، وبعدها أعد تحميل الصفحة."
-                );
-
-                return;
-            }
-
-
-            if (error.code === 2) {
-
-                alert(
-                    "⚠️ تعذر تحديد موقعك.\n" +
-                    "تأكد من تشغيل خدمات الموقع في جهازك."
-                );
-
-                return;
-            }
-
-
-            if (error.code === 3) {
-
-                alert(
-                    "⚠️ انتهت مهلة تحديد الموقع.\n" +
-                    "حاول مرة أخرى."
-                );
-
-                return;
-            }
-
-
-            alert(
-                "⚠️ حدث خطأ أثناء تحديد الموقع."
-            );
-
+            button.innerText = "🗺️ وجهني للأقرب لـ شبك الطير";
+            if (error.code === 1) {alert("⚠️ تم رفض إذن الموقع.\nفعل الموقع من 🔒");}
+            else if (error.code === 2) {alert("⚠️ تعذر تحديد موقعك.\nشغل GPS من الجوال");}
+            else if (error.code === 3) {alert("⚠️ انتهت مهلة تحديد الموقع.");}
+            else {alert("⚠️ حدث خطأ أثناء تحديد الموقع.");}
         },
-
-
-        {
-
-            enableHighAccuracy: true,
-
-            timeout: 20000,
-
-            maximumAge: 0
-
-        }
-
+        {enableHighAccuracy: true,timeout: 30000,maximumAge: 0}
     );
-
 }
 
-
-
-/* =====================================================
-   WEATHER
-===================================================== */
-
-function getWeather(
-    lat,
-    lon
-) {
-
-
-    const url =
-        "https://api.open-meteo.com/v1/forecast" +
-
-        "?latitude=" +
-        encodeURIComponent(lat) +
-
-        "&longitude=" +
-        encodeURIComponent(lon) +
-
-        "&current=" +
-        "wind_speed_10m," +
-        "wind_direction_10m" +
-
-        "&timezone=auto";
-
-
-    fetch(url)
-
-
-    .then(function(response) {
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Weather request failed"
-            );
-        }
-
-
-        return response.json();
-
+function getWeather(lat,lon) {
+    const url = "https://api.open-meteo.com/v1/forecast?latitude=" + encodeURIComponent(lat) + "&longitude=" + encodeURIComponent(lon) + "&current=wind_speed_10m,wind_direction_10m&timezone=auto";
+    fetch(url).then(function(response) {if (!response.ok) {throw new Error("Weather request failed");}return response.json();})
+   .then(function(data) {
+        const current = data.current;
+        if (!current) {throw new Error("No current weather");}
+        const speed = Number(current.wind_speed_10m);
+        const degrees = Number(current.wind_direction_10m);
+        const direction = parseWindDirection(degrees);
+        const index = calculateIndex(speed, direction);
+        document.getElementById("wind-speed").innerText = speed.toFixed(1) + " كم/س";
+        document.getElementById("wind-dir").innerText = direction;
+        document.getElementById("landing-index").innerText = index + "%";
+        createPrediction(lat, lon, direction);
     })
-
-
-    .then(function(data) {
-
-
-        console.log(
-            "Weather:",
-            data
-        );
-
-
-        const current =
-            data.current;
-
-
-        if (!current) {
-
-            throw new Error(
-                "No current weather"
-            );
-        }
-
-
-        const speed =
-            Number(
-                current.wind_speed_10m
-            );
-
-
-        const degrees =
-            Number(
-                current.wind_direction_10m
-            );
-
-
-        const direction =
-            parseWindDirection(
-                degrees
-            );
-
-
-        const index =
-            calculateIndex(
-                speed,
-                direction
-            );
-
-
-        document.getElementById(
-            "wind-speed"
-        ).innerText =
-            speed.toFixed(1) +
-            " كم/س";
-
-
-        document.getElementById(
-            "wind-dir"
-        ).innerText =
-            direction;
-
-
-        document.getElementById(
-            "landing-index"
-        ).innerText =
-            index + "%";
-
-
-        createPrediction(
-            lat,
-            lon,
-            direction
-        );
-
-    })
-
-
-    .catch(function(error) {
-
-
-        console.error(
-            "Weather error:",
-            error
-        );
-
-
-        document.getElementById(
-            "wind-speed"
-        ).innerText =
-            "تعذر الرصد";
-
-
-        document.getElementById(
-            "wind-dir"
-        ).innerText =
-            "تعذر الرصد";
-
-
-        alert(
-            "تم تحديد موقعك، ولكن تعذر جلب بيانات الرياح."
-        );
-
+   .catch(function(error) {
+        console.error("Weather error:", error);
+        document.getElementById("wind-speed").innerText = "تعذر الرصد";
+        document.getElementById("wind-dir").innerText = "تعذر الرصد";
+        alert("تم تحديد موقعك، ولكن تعذر جلب بيانات الرياح.");
     });
-
 }
 
-
-
-/* =====================================================
-   LANDING INDEX
-===================================================== */
-
-function calculateIndex(
-    speed,
-    direction
-) {
-
-
+function calculateIndex(speed,direction) {
     let index = 65;
-
-
-    if (
-        direction.includes("شمالية")
-    ) {
-
-        index += 20;
-    }
-
-
-    if (
-        speed >= 10 &&
-        speed <= 25
-    ) {
-
-        index += 10;
-    }
-
-
-    if (
-        speed > 25
-    ) {
-
-        index += 5;
-    }
-
-
-    if (
-        speed < 5
-    ) {
-
-        index -= 15;
-    }
-
-
-    index =
-        Math.max(
-            0,
-            Math.min(
-                99,
-                index
-            )
-        );
-
-
+    if (direction.includes("شمالية")) {index += 20;}
+    if (speed >= 10 && speed <= 25) {index += 10;}
+    if (speed > 25) {index += 5;}
+    if (speed < 5) {index -= 15;}
+    index = Math.max(0, Math.min(100, index));
     return index;
 }
 
-
-
-/* =====================================================
-   PREDICTION
-===================================================== */
-
-function createPrediction(
-    lat,
-    lon,
-    direction
-) {
-
-
-    if (predictionMarker) {
-
-        map.removeLayer(
-            predictionMarker
-        );
-    }
-
-
-    let predLat =
-        lat;
-
-
-    let predLon =
-        lon;
-
-
-    if (
-        direction.includes("شرقية")
-    ) {
-
-        predLon -= 0.04;
-    }
-
-
-    if (
-        direction.includes("غربية")
-    ) {
-
-        predLon += 0.04;
-    }
-
-
-    if (
-        direction.includes("شمالية")
-    ) {
-
-        predLat -= 0.04;
-    }
-
-
-    if (
-        direction.includes("جنوبية")
-    ) {
-
-        predLat += 0.04;
-    }
-
-
-    predictionMarker =
-        L.circle(
-            [predLat, predLon],
-            {
-
-                color: "#ffaa00",
-
-                fillColor: "#ffaa00",
-
-                fillOpacity: 0.35,
-
-                radius: 2500
-
-            }
-        )
-        .addTo(map);
-
-
-    predictionMarker.bindPopup(
-
-        "<b>🟡 منطقة توقع النزل</b><br>" +
-
-        "موقع تقريبي حسب اتجاه الرياح."
-
-    ).openPopup();
-
-
-    map.setView(
-        [predLat, predLon],
-        12
-    );
-
+function createPrediction(lat, lon, direction) {
+    if (predictionMarker) map.removeLayer(predictionMarker);
+    let predLat = lat;let predLon = lon;
+    if (direction.includes("شمالية")) { predLat -= 0.06; }
+    if (direction.includes("جنوبية")) { predLat += 0.06; }
+    if (direction.includes("شرقية")) { predLon -= 0.06; }
+    if (direction.includes("غربية")) { predLon += 0.06; }
+    predictionMarker = L.circle([predLat, predLon], {color: "#00ff66",fillColor: "#00ff66",fillOpacity: 0.25,radius: 4000}).addTo(map);
+    predictionMarker.bindPopup("<b>🦅 مسار هجرة متوقع</b><br>الطيور قادمة من: " + direction).openPopup();
+    map.setView([predLat, predLon], 11);
 }
-
-
-
-/* =====================================================
-   MORNING COASTAL
-===================================================== */
 
 function activateCoastalMorning() {
-
-
-    map.setView(
-        [28.4532, 48.4908],
-        12
-    );
-
-
-    if (predictionMarker) {
-
-        map.removeLayer(
-            predictionMarker
-        );
-    }
-
-
-    predictionMarker =
-        L.marker(
-            [28.4700, 48.4800]
-        )
-        .addTo(map);
-
-
-    predictionMarker
-        .bindPopup(
-            "<b>🦅 نزل الصباح الساحلي</b><br>" +
-            "منطقة توقع تقريبية للرصد الساحلي."
-        )
-        .openPopup();
-
+    map.setView([28.4532, 48.4908], 12);
+    if (predictionMarker) map.removeLayer(predictionMarker);
+    predictionMarker = L.marker([28.4700, 48.4800]).addTo(map);
+    predictionMarker.bindPopup("<b>🦅 نزل الصباح الساحلي</b><br>منطقة توقع تقريبية للرصد الساحلي.").openPopup();
 }
 
-
-
-/* =====================================================
-   WIND DIRECTION
-===================================================== */
-
-function parseWindDirection(
-    deg
-) {
-
-
-    if (
-        deg >= 337.5 ||
-        deg < 22.5
-    ) {
-
-        return "شمالية ⬇️";
-    }
-
-
-    if (
-        deg >= 22.5 &&
-        deg < 67.5
-    ) {
-
-        return "شمالية شرقية ↙️";
-    }
-
-
-    if (
-        deg >= 67.5 &&
-        deg < 112.5
-    ) {
-
-        return "شرقية ⬅️";
-    }
-
-
-    if (
-        deg >= 112.5 &&
-        deg < 157.5
-    ) {
-
-        return "جنوبية شرقية ↖️";
-    }
-
-
-    if (
-        deg >= 157.5 &&
-        deg < 202.5
-    ) {
-
-        return "جنوبية (كوس) ⬆️";
-    }
-
-
-    if (
-        deg >= 202.5 &&
-        deg < 247.5
-    ) {
-
-        return "جنوبية غربية ↗️";
-    }
-
-
-    if (
-        deg >= 247.5 &&
-        deg < 292.5
-    ) {
-
-        return "غربية ➡️";
-    }
-
-
+function parseWindDirection(deg) {
+    if (deg >= 337.5 || deg < 22.5) {return "شمالية ⬇️";}
+    if (deg >= 22.5 && deg < 67.5) {return "شمالية شرقية ↙️";}
+    if (deg >= 67.5 && deg < 112.5) {return "شرقية ⬅️";}
+    if (deg >= 112.5 && deg < 157.5) {return "جنوبية شرقية ↖️";}
+    if (deg >= 157.5 && deg < 202.5) {return "جنوبية (كوس) ⬆️";}
+    if (deg >= 202.5 && deg < 247.5) {return "جنوبية غربية ↗️";}
+    if (deg >= 247.5 && deg < 292.5) {return "غربية ➡️";}
     return "شمالية غربية ↘️";
-
 }
-
-
-
-/* =====================================================
-   IMAGE
-===================================================== */
 
 function loadPhoto(event) {
-
-
-    const file =
-        event.target.files[0];
-
-
-    if (!file) {
-
-        return;
-    }
-
-
-    if (
-        !file.type.startsWith("image/")
-    ) {
-
-        alert(
-            "اختر صورة صحيحة."
-        );
-
-        return;
-    }
-
-
-    const image =
-        document.getElementById(
-            "falcon-pic"
-        );
-
-
-    image.style.display =
-        "block";
-
-
-    image.src =
-        URL.createObjectURL(
-            file
-        );
-
+    const file = event.target.files[0];
+    if (!file) {return;}
+    if (!file.type.startsWith("image/")) {alert("اختر صورة صحيحة.");return;}
+    const image = document.getElementById("falcon-pic");
+    image.style.display = "block";
+    image.src = URL.createObjectURL(file);
 }
 
-
-
-/* =====================================================
-   BUTTON EVENTS
-===================================================== */
-
-document
-    .getElementById("locationBtn")
-    .addEventListener(
-        "click",
-        locateUserAndPredict
-    );
-
-
-document
-    .getElementById("morningBtn")
-    .addEventListener(
-        "click",
-        activateCoastalMorning
-    );
-
-
-
-/* =====================================================
-   START
-===================================================== */
-
+document.getElementById("locationBtn").addEventListener("click", locateUserAndPredict);
+document.getElementById("morningBtn").addEventListener("click", activateCoastalMorning);
 startMap();
-
 </script>
-
 </body>
 </html>
